@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 23px Helvetica, Arial; }
+      h2 { font:2em}
+    </style>
+  </head>
+  <body>
+    <h1>Live Stats</h1>
+    <h2 id="statistic"></h2>    
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      socket.on('counter', function(msg){
+        $('#statistic').text(msg);
+      });
+    </script>
+  </body>
+</html>
