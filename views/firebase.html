@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.2.0/firebase.js"></script>
+  </head>
+  <body>
+    <h1>Firebase</h1>
+    <p>Let's see what this can do for me</p>
+    <label for="todo">Todo</label>
+    <input type="text" name="todo" value="" id="todo">
+    <button id="save">Save</button>
+    <ul id="action_items">
+      
+    </ul>
+    <button id="hi">Save</button>
+    <script>
+
+    var ref = new Firebase("https://intense-fire-3296.firebaseio.com");
+
+    ref.createUser({
+      email    : "bobtony@firebase.com",
+      password : "correcthorsebatterystaple"
+    }, function(error, userData) {
+      if (error) {
+        console.log("Error creating user:", error);
+      } else {
+        console.log("Successfully created user account with uid:", userData.uid);
+      }
+    });
+    
+      var myFirebaseRef = new Firebase("https://intense-fire-3296.firebaseio.com/kevin");
+      var $ul = $("#action_items")
+
+      //firebase calls this back
+      myFirebaseRef.child("action_items").on("child_added", function(results) {
+        action_item = results.val();
+        $ul.append("<li id='" + results.key() + "'>" + action_item + "</li>");
+      });
+      
+      myFirebaseRef.child("action_items").on("child_removed", function(results) {
+        var key = results.key();
+        var selector = '#'+ key;
+        $(selector).remove();
+      });          
+      
+
+      $("#save").click(function(){
+        myFirebaseRef.child("action_items").push($("#todo").val());
+      });
+
+      $("#hi").click(function(){
+        myFirebaseRef.set({
+            action_items:["get milk", "call mom"]
+        });
+      });
+
+    </script>
+  </body>
+</html>

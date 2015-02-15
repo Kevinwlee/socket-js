@@ -20,6 +20,10 @@ app.get('/stats', function(req, res){
   res.sendFile(__dirname + '/stats.html');
 });
 
+app.get('/firebase', function(req, res){
+  res.sendFile(__dirname + '/views/firebase.html');
+});
+
 app.get('/js', function(req, res){
   res.sendFile(__dirname + '/public/c3.min.js');
 });
