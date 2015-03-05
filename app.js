@@ -2,6 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var moment = require('moment');
+var redis = require('redis');
 
 var counter = 0;
 var chats = [];
@@ -21,6 +22,32 @@ app.get('/js', function(req, res){
 app.get('/css', function(req, res){
   res.sendFile(__dirname + '/public/c3.min.css');
 });
+
+
+// ----------------------------
+// The Redis side of the house
+// ----------------------------
+
+var client = redis.createClient(19638, 'pub-redis-19638.us-east-1-2.4.ec2.garantiadata.com', {no_ready_check: true});
+
+client.auth('password', function (err) {
+    console.log(err);
+});
+
+client.on('connect', function() {
+    console.log('Connected to Redis');
+});
+
+client.set("foo", "Kevin was here", redis.print);
+client.get("foo", function (err, reply) {
+    console.log(reply.toString());
+});
+
+client.subscribe("context-event-channel");
+
+// --------------------------------
+// The Socket IO side of the house
+// --------------------------------
 
 io.on('connection', function(socket){
   
