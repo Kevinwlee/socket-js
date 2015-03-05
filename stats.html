@@ -28,7 +28,7 @@
       var socket = io();
       
       
-      socket.on('counter', function(msg){
+      socket.on('counter_channel', function(msg){
         $('#statistic').text(msg);
       });
             
@@ -37,25 +37,26 @@
       var chart = c3.generate({
         bindto: '#chart',
         data: {
-          columns: [
-            ['count', 0]              
+          x:"x",
+          xFormat: "%Y-%m-%d %H:%M:%S",
+          columns: [            
           ],
-          type:"bar"
+          type:"spline"
         },
-        bar: {
-          width: {
-              ratio: 0.5
+        axis: {
+            x: {
+              type: "timeseries",
+              tick: {
+                format: "%M:%S"
+              }
+            }
           }
-        }
+
       });
             
-      socket.on('epoc-count', function(data){ 
-        data.splice(0,0,"count");
-        chart.load({
-          columns: [
-            data
-          ]
-        });
+      socket.on('event_bar_channel', function(data){
+        // reload the chart
+        chart.load(data);
       });
       
       

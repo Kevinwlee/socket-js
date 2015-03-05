@@ -14,5 +14,6 @@ http://c3js.org/samples/chart_bar.html
 
 - install dependancies `npm install`
 - start the server `node index.js`
-- open http://localhost:3000/index
+- open http://localhost:3000/
 - open http://localhost:3000/stats
+
