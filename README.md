@@ -14,5 +14,10 @@ http://c3js.org/
 - install dependancies `npm install`
 - start the server `node app.js`
 - open http://localhost:3000/
-- open http://localhost:3000/stats
+- click start
+
+
+## Redis
+https://github.com/mranney/node_redis
+https://app.redislabs.com/main/info_stats
 
