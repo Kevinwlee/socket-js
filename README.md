@@ -6,14 +6,13 @@ http://momentjs.com/
 
 http://nodejs.org/
 
-http://c3js.org/samples/chart_bar.html
-
+http://c3js.org/
 
 
 ## Running the Demo
 
 - install dependancies `npm install`
-- start the server `node index.js`
+- start the server `node app.js`
 - open http://localhost:3000/
 - open http://localhost:3000/stats
 

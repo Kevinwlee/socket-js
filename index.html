@@ -25,7 +25,7 @@
       var socket = io();
       $('form').submit(function(){
         //emit a the chat
-        socket.emit('chat_channel', $('#m').val());
+        socket.emit('chat-channel', $('#m').val());
 
         $('#m').val('');
 
@@ -33,7 +33,7 @@
       });
       
       //List for chats
-      socket.on('chat_channel', function(msg){
+      socket.on('chat-channel', function(msg){
         $('#messages').append($('<li>').text(msg));
       });
       

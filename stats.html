@@ -1,24 +1,33 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>C3.js + Socket.io + Node.js</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 23px Helvetica, Arial; }
-      h2 { font:2em}
+      h2{margin-top:1em;}
     </style>
     
     <link rel="stylesheet" href="css" type="text/css" media="screen" title="no title" charset="utf-8">
     
   </head>
   <body>
-    <h2>Stats</h2>
-    <h2 id="statistic"></h2> 
-    
-    <h3>Epoc JS</h3>
+    <h2>C3.js + Socket.io + Node.js</h2>
+    <br><br>
+    <button id="start">&nbsp;&nbsp;Start&nbsp;&nbsp;</button>
+    <hr>
+    <h4>Line</h4>
     <div id="chart"></div>
-
-     
+    <hr>
+    <h4>Guage</h4>
+    <div id="guage"></div>
+    <hr>
+    <h4>Donut</h4>
+    <div id="donut"></div>
+    <hr>
+    <h4>Bar</h4>
+    <div id="bar"></div>
+    
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -26,22 +35,18 @@
     
     <script>
       var socket = io();
-      
-      
-      socket.on('counter_channel', function(msg){
-        $('#statistic').text(msg);
-      });
             
-      //epoch test
+      // ----------
+      // Line Chart
+      // ----------
       
-      var chart = c3.generate({
+      var lineChart = c3.generate({
         bindto: '#chart',
         data: {
           x:"x",
           xFormat: "%Y-%m-%d %H:%M:%S",
           columns: [            
-          ],
-          type:"spline"
+          ]
         },
         axis: {
             x: {
@@ -54,12 +59,96 @@
 
       });
             
-      socket.on('event_bar_channel', function(data){
+      socket.on('c3-line-channel', function(data){
         // reload the chart
-        chart.load(data);
+        lineChart.load(data);
+      });
+
+      
+      // ----------
+      // Guage Chart
+      // ----------
+      
+      var guageChart = c3.generate({
+        bindto: '#guage',
+        data: {
+          type: 'gauge',
+          columns:[0]
+        },
+        gauge: {
+          min: 0,
+          max: 100
+        },
+        color: {
+          pattern: ['#FF0000', '#F6C600', '#60B044'],
+          threshold: {
+            values: [30, 60, 90]
+          }
+        }        
+      });
+      
+      socket.on("c3-guage-channel", function(data){
+        guageChart.load(data);
+      });
+
+      // ----------
+      // Donut Chart
+      // ----------
+
+      var donutChart = c3.generate({
+        bindto: "#donut",
+        data: {
+          columns: [
+          ],
+          type : 'donut',
+          onclick: function (d, i) { console.log("onclick", d, i); },
+          onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+          onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+        },
+        donut: {
+          title: "Device Breakdown"
+        }
+      });
+      
+      socket.on("c3-donut-channel", function(data){
+        donutChart.load(data);
+      });
+      
+      // ----------
+      // Bar Chart
+      // ----------
+      var barChart = c3.generate({
+        bindto:"#bar",
+        data: {
+          x:"x",
+          xFormat: "%Y-%m-%d %H:%M:%S",          
+          columns: [
+          ],
+          type: 'bar'
+        },
+        bar: {
+          width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+          }
+        },
+        axis: {
+          x: {
+            type: "timeseries",
+            tick: {
+              format: "%M:%S"
+            }
+          }
+        }
+      });      
+      socket.on("c3-bar-channel", function(data){
+        barChart.load(data);
       });
       
       
+      
+      $("#start").on("click", function(){
+        socket.emit("start-channel", "start");
+      });
     </script>
       
   </body>
